@@ -7,6 +7,7 @@ sys.path.append("../../DB_Framework")
 
 import frame_mock as mock
 test_module = __import__("sqlite_db")
+import framework_db
 
 def dummy_use(arg_1):
     _ = arg_1
@@ -156,6 +157,101 @@ class SQLite_TestCase(unittest.TestCase):
         self.assertEquals(rc, 0)
         self.assertEquals(data, 10)
 
+    def test_delete_record(self):
+        print "test_delete_record"
+
+        s_db = test_module.SQLiteDB(DB_NAME, DB_PATH)
+        rc, rm, data = s_db.create_table()
+        self.assertEquals(rc, 0)
+        self.assertEquals(rm, "")
+        self.assertEquals(data, ())
+        rc,rm,data =  s_db.get_rows_count()
+        self.assertEquals(rc, 0)
+        self.assertEquals(data, 0)
+
+        records = [
+            ("task_1", "simple task 1", 1),
+            ("task_1", "simple task 1", 2),
+        ]
+
+        for item in records:
+            s_db.add_record(item)
+
+        rc, rm, data =  s_db.get_rows_count()
+        self.assertEquals(rc, 0)
+        self.assertEquals(data, 2)
+
+        #rmv_record = (("task_1", "simple task 1", 1))
+        rmv_record = (("task_1", 1))
+        rc, rm =  s_db.delete_record(rmv_record)
+
+        rc,rm,data =  s_db.get_rows_count()
+        self.assertEquals(rc, 0)
+        self.assertEquals(data, 1)
+
+    def test_delete_record_item_not_exist_in_db(self):
+        print "test_delete_record_item_not_exist_in_db"
+
+        s_db = test_module.SQLiteDB(DB_NAME, DB_PATH)
+        rc, rm, data = s_db.create_table()
+        self.assertEquals(rc, 0)
+        self.assertEquals(rm, "")
+        self.assertEquals(data, ())
+        rc,rm,data =  s_db.get_rows_count()
+        self.assertEquals(rc, 0)
+        self.assertEquals(data, 0)
+
+        records = [
+            ("task_1", "simple task 1", 1),
+            ("task_1", "simple task 1", 2),
+        ]
+
+        for item in records:
+            s_db.add_record(item)
+
+        rc, rm, data =  s_db.get_rows_count()
+        self.assertEquals(rc, 0)
+        self.assertEquals(data, 2)
+
+        #rmv_record = (("task_1", "simple task 1", 1))
+        rmv_record = (("task_777", 1))
+        rc, rm =  s_db.delete_record(rmv_record)
+
+        rc,rm,data =  s_db.get_rows_count()
+        self.assertEquals(rc, 0)
+        self.assertEquals(data, 2)
+
+    def test_delete_record_too_much_values(self):
+        print "test_delete_record_too_much_values"
+
+        s_db = test_module.SQLiteDB(DB_NAME, DB_PATH)
+        rc, rm, data = s_db.create_table()
+        self.assertEquals(rc, 0)
+        self.assertEquals(rm, "")
+        self.assertEquals(data, ())
+        rc,rm,data =  s_db.get_rows_count()
+        self.assertEquals(rc, 0)
+        self.assertEquals(data, 0)
+
+        records = [
+            ("task_1", "simple task 1", 1),
+            ("task_1", "simple task 1", 2),
+        ]
+
+        for item in records:
+            s_db.add_record(item)
+
+        rc, rm, data =  s_db.get_rows_count()
+        self.assertEquals(rc, 0)
+        self.assertEquals(data, 2)
+
+        rmv_record = (("task_777", 1, 2))
+        rc, rm =  s_db.delete_record(rmv_record)
+        self.assertEquals(rc, framework_db.ERROR_SQL_QUERY_VALUES)
+
+        rc,rm,data =  s_db.get_rows_count()
+        self.assertEquals(rc, 0)
+        self.assertEquals(data, 2)
 
 if __name__ == "__main__":
     unittest.main()
