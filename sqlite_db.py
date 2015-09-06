@@ -89,6 +89,39 @@ class SQLiteDB(frame_db.Database):
 
         return rc, rm, data
 
+    def get_rows_count(self):
+
+        sql_count = "SELECT Count(*) FROM %s;" % self._table_struct["name"]
+        rc, rm, data = self.execute_sql_no_commit(sql_count)
+        return rc, rm, data[0][0]
+
+    def execute_sql_no_commit(self, sql_query):
+
+        rc = 0; rm = ""; data = ()
+        db_connection = None
+
+        try:
+            db_connection = sqlite3.connect(self.db_path)
+            db_connection.text_factory = str
+            db_cursor = db_connection.cursor()
+            db_cursor.execute(sql_query)
+
+            data = db_cursor.fetchall()
+
+            if len(data) == 0:
+                data = ()
+
+        except sqlite3.Error as e:
+
+            err_msg = str(e)
+            err_code = e.args
+            rc, rm = self.parse_error(err_code, err_msg)
+
+        finally:
+            if db_connection:
+                db_connection.close()
+
+        return rc, rm, data
 
 if __name__ == "__main__":
 

@@ -109,9 +109,52 @@ class SQLite_TestCase(unittest.TestCase):
         self.assertEquals(rm, "")
         rc, rm, data = s_db.read_all()
         self.assertEquals(records[0:2], data)
-        rc, rm = s_db.add_record(records[1])
-        print "RC %d" % rc
-        print rm
+
+    def test_add_record_duplicated_items(self):
+        print "test_add_record_duplicated_items"
+        pass
+
+    def test_get_rows_count(self):
+        print "test_get_rows_count"
+
+        s_db = test_module.SQLiteDB(DB_NAME, DB_PATH)
+        rc, rm, data = s_db.create_table()
+        self.assertEquals(rc, 0)
+        self.assertEquals(rm, "")
+        self.assertEquals(data, ())
+        rc,rm,data =  s_db.get_rows_count()
+        self.assertEquals(rc, 0)
+        self.assertEquals(data, 0)
+
+        records = [
+            ("task_1", "simple task 1", 1),
+            ("task_1", "simple task 1", 2),
+            ("task_2", "simple task 2", 1),
+            ("task_2", "simple task 2", 2)
+        ]
+
+        for item in records:
+            s_db.add_record(item)
+
+        rc,rm,data =  s_db.get_rows_count()
+        self.assertEquals(rc, 0)
+        self.assertEquals(data, 4)
+
+        records_2 = [
+            ("task_3", "simple task 3", 1),
+            ("task_3", "simple task 3", 2),
+            ("task_4", "simple task 4", 1),
+            ("task_4", "simple task 4", 2),
+            ("task_5", "simple task 5", 1),
+            ("task_5", "simple task 6", 2)
+        ]
+
+        for item in records_2:
+            s_db.add_record(item)
+
+        rc,rm,data =  s_db.get_rows_count()
+        self.assertEquals(rc, 0)
+        self.assertEquals(data, 10)
 
 
 if __name__ == "__main__":
