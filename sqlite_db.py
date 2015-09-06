@@ -47,6 +47,8 @@ class SQLiteDB(frame_db.Database):
 
         if error_msg == err_msg_table_exist:
             rc, rm = self.check_structure()
+        elif "UNIQUE constraint failed" in error_msg:
+            rc = frame_db.ERROR_ITEM_NOT_UNIQUE
         else:
             rc = error_code
             rm = error_msg
@@ -76,7 +78,10 @@ class SQLiteDB(frame_db.Database):
         except sqlite3.Error as e:
 
             err_msg = str(e)
-            rc, rm = self.parse_error(err_msg)
+            err_code = e.args
+            print "ERR [%s]" % err_code
+            print err_msg
+            rc, rm = self.parse_error(err_code, err_msg)
 
         finally:
             if db_connection:

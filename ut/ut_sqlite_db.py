@@ -82,6 +82,38 @@ class SQLite_TestCase(unittest.TestCase):
         self.assertEquals(rc, 0)
         self.assertEquals(rm, "")
 
+    def test_add_record(self):
+        print "test_add_record"
+
+        s_db = test_module.SQLiteDB(DB_NAME, DB_PATH)
+        rc, rm, data = s_db.create_table()
+        self.assertEquals(rc, 0)
+        self.assertEquals(rm, "")
+        self.assertEquals(data, ())
+
+        records = [
+            ("task_1", "simple task 1", 1),
+            ("task_1", "simple task 1", 2),
+            ("task_2", "simple task 2", 1),
+            ("task_2", "simple task 2", 2)
+        ]
+
+        rc, rm = s_db.add_record(records[0])
+        self.assertEquals(rc, 0)
+        self.assertEquals(rm, "")
+        rc, rm, data = s_db.read_all()
+        self.assertEquals([records[0]], data)
+
+        rc, rm = s_db.add_record(records[1])
+        self.assertEquals(rc, 0)
+        self.assertEquals(rm, "")
+        rc, rm, data = s_db.read_all()
+        self.assertEquals(records[0:2], data)
+        rc, rm = s_db.add_record(records[1])
+        print "RC %d" % rc
+        print rm
+
+
 if __name__ == "__main__":
     unittest.main()
 
