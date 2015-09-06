@@ -59,34 +59,28 @@ class SQLiteDB(frame_db.Database):
         rc = 0; rm = ""; data = ()
         db_connection = None
 
-        if os.path.exists(self.db_path):
-            try:
+        try:
+            db_connection = sqlite3.connect(self.db_path)
+            db_connection.text_factory = str
+            db_cursor = db_connection.cursor()
+            db_cursor.execute(sql_query, values)
 
-                db_connection = sqlite3.connect(self.db_path)
-                db_connection.text_factory = str
-                db_cursor = db_connection.cursor()
-                db_cursor.execute(sql_query, values)
+            if commit == True:
+                db_connection.commit()
+            else:
+                data = db_cursor.fetchall()
 
-                if commit == True:
-                    db_connection.commit()
-                else:
-                    data = db_cursor.fetchall()
+            if len(data) == 0:
+                data = ()
 
-                if len(data) == 0:
-                    data = ()
+        except sqlite3.Error as e:
 
-            except sqlite3.Error as e:
+            err_msg = str(e)
+            rc, rm = self.parse_error(err_msg)
 
-                err_msg = str(e)
-                rc, rm = self.parse_error(err_msg)
-
-            finally:
-                if db_connection:
-                    db_connection.close()
-
-        else:
-            rm =  "Database %s does not exist." % self.db_path
-            rc = frame_db.ERROR_TABLE_NOT_EXISTS
+        finally:
+            if db_connection:
+                db_connection.close()
 
         return rc, rm, data
 

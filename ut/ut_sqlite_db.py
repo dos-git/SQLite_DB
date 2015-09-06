@@ -17,7 +17,7 @@ def dummy_use_many(*many_args):
 
 
 DB_NAME = "sql_db"
-DB_PATH = "test_sql"
+DB_PATH = "test_sql.db"
 
 class SQLite_TestCase(unittest.TestCase):
 
@@ -32,6 +32,7 @@ class SQLite_TestCase(unittest.TestCase):
             item.restore()
             mock.list_mocked_method.remove(item)
         if os.path.isfile(DB_PATH):
+
             os.remove(DB_PATH)
 
     def test__init__set_default(self):
@@ -58,6 +59,28 @@ class SQLite_TestCase(unittest.TestCase):
         self.assertEquals(s_db.keys, ('field_name', 'id'))
         self.assertNotEquals(s_db.sql_query_create, "")
 
+    def test_create(self):
+        print "test_create"
+
+        s_db = test_module.SQLiteDB(DB_NAME, DB_PATH)
+        rc, rm, data = s_db.create_table()
+        self.assertEquals(rc, 0)
+        self.assertEquals(rm, "")
+        self.assertEquals(data, ())
+
+
+    def test_check_structure(self):
+        print "test_check_structure"
+
+        s_db = test_module.SQLiteDB(DB_NAME, DB_PATH)
+        rc, rm, data = s_db.create_table()
+        self.assertEquals(rc, 0)
+        self.assertEquals(rm, "")
+        self.assertEquals(data, ())
+
+        rc, rm = s_db.check_structure()
+        self.assertEquals(rc, 0)
+        self.assertEquals(rm, "")
 
 if __name__ == "__main__":
     unittest.main()
