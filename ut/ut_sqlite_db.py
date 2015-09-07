@@ -111,9 +111,43 @@ class SQLite_TestCase(unittest.TestCase):
         rc, rm, data = s_db.read_all()
         self.assertEquals(records[0:2], data)
 
+    def test_add_record_to_much_values(self):
+        print "test_add_record"
+
+        s_db = test_module.SQLiteDB(DB_NAME, DB_PATH)
+        rc, rm, data = s_db.create_table()
+        self.assertEquals(rc, 0)
+        self.assertEquals(rm, "")
+        self.assertEquals(data, ())
+
+        records = ("task_1", "simple task 1", 1, 2)
+
+        rc, rm = s_db.add_record(records)
+        self.assertEquals(rc, framework_db.ERROR_SQL_QUERY_VALUES)
+        err_msg = "Wrong amount of values"
+
+        self.assertEquals(rm, err_msg)
+        rc, rm, data = s_db.read_all()
+        self.assertEquals(data, ())
+
     def test_add_record_duplicated_items(self):
         print "test_add_record_duplicated_items"
-        pass
+
+        s_db = test_module.SQLiteDB(DB_NAME, DB_PATH)
+        rc, rm, data = s_db.create_table()
+        self.assertEquals(rc, 0)
+        self.assertEquals(rm, "")
+        self.assertEquals(data, ())
+
+        record = ("task_1", "simple task 1", 1)
+        rc, rm = s_db.add_record(record)
+        self.assertEquals(rc, 0)
+        self.assertEquals(rm, "")
+
+        rc, rm = s_db.add_record(record)
+        self.assertEquals(rc, framework_db.ERROR_ITEM_NOT_UNIQUE)
+        err_msg = 'UNIQUE constraint failed: main_table.field_name, main_table.id'
+        self.assertEquals(rm, err_msg)
 
     def test_get_rows_count(self):
         print "test_get_rows_count"
@@ -213,7 +247,6 @@ class SQLite_TestCase(unittest.TestCase):
         self.assertEquals(rc, 0)
         self.assertEquals(data, 2)
 
-        #rmv_record = (("task_1", "simple task 1", 1))
         rmv_record = (("task_777", 1))
         rc, rm =  s_db.delete_record(rmv_record)
 
@@ -252,6 +285,90 @@ class SQLite_TestCase(unittest.TestCase):
         rc,rm,data =  s_db.get_rows_count()
         self.assertEquals(rc, 0)
         self.assertEquals(data, 2)
+    #
+    # def test_delete_update_record(self):
+    #     print "test_update_record"
+    #
+    #     s_db = test_module.SQLiteDB(DB_NAME, DB_PATH)
+    #     rc, rm, data = s_db.create_table()
+    #     self.assertEquals(rc, 0)
+    #     self.assertEquals(rm, "")
+    #     self.assertEquals(data, ())
+    #     rc,rm,data =  s_db.get_rows_count()
+    #     self.assertEquals(rc, 0)
+    #     self.assertEquals(data, 0)
+    #
+    #     record = ("task_1", "simple task 1", 1)
+    #
+    #     s_db.add_record(record)
+    #
+    #     rc, rm, data =  s_db.get_rows_count()
+    #     self.assertEquals(rc, 0)
+    #     self.assertEquals(data, 1)
+    #
+    #     record_upd = ("task_1", "simple task 2", 1)
+    #     s_db.update_record(record_upd)
+    #     rc, rm, data =  s_db.get_rows_count()
+    #     self.assertEquals(rc, 0)
+    #     self.assertEquals(data, 1)
+    #
+    #     rc, rm, data =  s_db.read_all()
+    #     print "DATA [%s]" %str(data)
+    #     self.assertEquals(data[0], record_upd)
+    #
+    #
+    # def test_delete_update_record_too_much_values(self):
+    #     print "test_update_record_too_much_values"
+    #
+    #     s_db = test_module.SQLiteDB(DB_NAME, DB_PATH)
+    #     rc, rm, data = s_db.create_table()
+    #     self.assertEquals(rc, 0)
+    #     self.assertEquals(rm, "")
+    #     self.assertEquals(data, ())
+    #     rc,rm,data =  s_db.get_rows_count()
+    #     self.assertEquals(rc, 0)
+    #     self.assertEquals(data, 0)
+    #
+    #     record = ("task_1", "simple task 1", 1)
+    #
+    #     s_db.add_record(record)
+    #
+    #     rc, rm, data =  s_db.get_rows_count()
+    #     self.assertEquals(rc, 0)
+    #     self.assertEquals(data, 1)
+    #
+    #     record_upd = ("task_1", "simple task 2", 1)
+    #     s_db.add_record(record_upd)
+    #     rc, rm, data =  s_db.get_rows_count()
+    #     self.assertEquals(rc, 0)
+    #     self.assertEquals(data, 1)
+
+
+    def test_delete_update_record_by_keys(self):
+        print "test_delete_update_record_by_keys"
+
+        s_db = test_module.SQLiteDB(DB_NAME, DB_PATH)
+        rc, rm, data = s_db.create_table()
+        self.assertEquals(rc, 0)
+        self.assertEquals(rm, "")
+        self.assertEquals(data, ())
+        rc,rm,data =  s_db.get_rows_count()
+        self.assertEquals(rc, 0)
+        self.assertEquals(data, 0)
+
+        record = ("task_1", "simple task 1", 1)
+
+        s_db.add_record(record)
+        record_upd = ("task_1", "simple task 2", 1)
+
+        rc, rm, data =  s_db.get_rows_count()
+        self.assertEquals(rc, 0)
+        self.assertEquals(data, 1)
+
+        rc, rm = s_db.update_record_by_keys(record_upd)
+        self.assertEquals(rc, 0)
+        rc, rm, data =  s_db.read_all()
+        print "DATA [%s]" %str(data)
 
 if __name__ == "__main__":
     unittest.main()

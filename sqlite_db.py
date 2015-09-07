@@ -49,6 +49,7 @@ class SQLiteDB(frame_db.Database):
             rc, rm = self.check_structure()
         elif "UNIQUE constraint failed" in error_msg:
             rc = frame_db.ERROR_ITEM_NOT_UNIQUE
+            rm = error_msg
         else:
             rc = error_code
             rm = error_msg
@@ -79,8 +80,6 @@ class SQLiteDB(frame_db.Database):
 
             err_msg = str(e)
             err_code = e.args
-            print "ERR [%s]" % err_code
-            print err_msg
             rc, rm = self.parse_error(err_code, err_msg)
 
         finally:
@@ -125,5 +124,4 @@ class SQLiteDB(frame_db.Database):
 
 if __name__ == "__main__":
 
-    s = SQLiteDB()
     pass
