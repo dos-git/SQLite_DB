@@ -65,7 +65,7 @@ class SQLite_TestCase(unittest.TestCase):
 
         s_db = test_module.SQLiteDB(DB_NAME, DB_PATH)
         rc, rm, data = s_db.create_table()
-        self.assertEquals(rc, 0)
+        self.assertEquals(rc, framework_db.NOERROR)
         self.assertEquals(rm, "")
         self.assertEquals(data, ())
 
@@ -75,12 +75,12 @@ class SQLite_TestCase(unittest.TestCase):
 
         s_db = test_module.SQLiteDB(DB_NAME, DB_PATH)
         rc, rm, data = s_db.create_table()
-        self.assertEquals(rc, 0)
+        self.assertEquals(rc, framework_db.NOERROR)
         self.assertEquals(rm, "")
         self.assertEquals(data, ())
 
         rc, rm = s_db.check_structure()
-        self.assertEquals(rc, 0)
+        self.assertEquals(rc, framework_db.NOERROR)
         self.assertEquals(rm, "")
 
     def test_add_record(self):
@@ -88,7 +88,7 @@ class SQLite_TestCase(unittest.TestCase):
 
         s_db = test_module.SQLiteDB(DB_NAME, DB_PATH)
         rc, rm, data = s_db.create_table()
-        self.assertEquals(rc, 0)
+        self.assertEquals(rc, framework_db.NOERROR)
         self.assertEquals(rm, "")
         self.assertEquals(data, ())
 
@@ -100,13 +100,13 @@ class SQLite_TestCase(unittest.TestCase):
         ]
 
         rc, rm = s_db.add_record(records[0])
-        self.assertEquals(rc, 0)
+        self.assertEquals(rc, framework_db.NOERROR)
         self.assertEquals(rm, "")
         rc, rm, data = s_db.read_all()
         self.assertEquals([records[0]], data)
 
         rc, rm = s_db.add_record(records[1])
-        self.assertEquals(rc, 0)
+        self.assertEquals(rc, framework_db.NOERROR)
         self.assertEquals(rm, "")
         rc, rm, data = s_db.read_all()
         self.assertEquals(records[0:2], data)
@@ -116,7 +116,7 @@ class SQLite_TestCase(unittest.TestCase):
 
         s_db = test_module.SQLiteDB(DB_NAME, DB_PATH)
         rc, rm, data = s_db.create_table()
-        self.assertEquals(rc, 0)
+        self.assertEquals(rc, framework_db.NOERROR)
         self.assertEquals(rm, "")
         self.assertEquals(data, ())
 
@@ -135,13 +135,13 @@ class SQLite_TestCase(unittest.TestCase):
 
         s_db = test_module.SQLiteDB(DB_NAME, DB_PATH)
         rc, rm, data = s_db.create_table()
-        self.assertEquals(rc, 0)
+        self.assertEquals(rc, framework_db.NOERROR)
         self.assertEquals(rm, "")
         self.assertEquals(data, ())
 
         record = ("task_1", "simple task 1", 1)
         rc, rm = s_db.add_record(record)
-        self.assertEquals(rc, 0)
+        self.assertEquals(rc, framework_db.NOERROR)
         self.assertEquals(rm, "")
 
         rc, rm = s_db.add_record(record)
@@ -154,11 +154,11 @@ class SQLite_TestCase(unittest.TestCase):
 
         s_db = test_module.SQLiteDB(DB_NAME, DB_PATH)
         rc, rm, data = s_db.create_table()
-        self.assertEquals(rc, 0)
+        self.assertEquals(rc, framework_db.NOERROR)
         self.assertEquals(rm, "")
         self.assertEquals(data, ())
         rc,rm,data =  s_db.get_rows_count()
-        self.assertEquals(rc, 0)
+        self.assertEquals(rc, framework_db.NOERROR)
         self.assertEquals(data, 0)
 
         records = [
@@ -172,7 +172,7 @@ class SQLite_TestCase(unittest.TestCase):
             s_db.add_record(item)
 
         rc,rm,data =  s_db.get_rows_count()
-        self.assertEquals(rc, 0)
+        self.assertEquals(rc, framework_db.NOERROR)
         self.assertEquals(data, 4)
 
         records_2 = [
@@ -188,7 +188,7 @@ class SQLite_TestCase(unittest.TestCase):
             s_db.add_record(item)
 
         rc,rm,data =  s_db.get_rows_count()
-        self.assertEquals(rc, 0)
+        self.assertEquals(rc, framework_db.NOERROR)
         self.assertEquals(data, 10)
 
     def test_delete_record(self):
@@ -196,7 +196,7 @@ class SQLite_TestCase(unittest.TestCase):
 
         s_db = test_module.SQLiteDB(DB_NAME, DB_PATH)
         rc, rm, data = s_db.create_table()
-        self.assertEquals(rc, 0)
+        self.assertEquals(rc, framework_db.NOERROR)
         self.assertEquals(rm, "")
         self.assertEquals(data, ())
         rc,rm,data =  s_db.get_rows_count()
@@ -212,7 +212,7 @@ class SQLite_TestCase(unittest.TestCase):
             s_db.add_record(item)
 
         rc, rm, data =  s_db.get_rows_count()
-        self.assertEquals(rc, 0)
+        self.assertEquals(rc, framework_db.NOERROR)
         self.assertEquals(data, 2)
 
         #rmv_record = (("task_1", "simple task 1", 1))
@@ -220,7 +220,7 @@ class SQLite_TestCase(unittest.TestCase):
         rc, rm =  s_db.delete_record(rmv_record)
 
         rc,rm,data =  s_db.get_rows_count()
-        self.assertEquals(rc, 0)
+        self.assertEquals(rc, framework_db.NOERROR)
         self.assertEquals(data, 1)
 
     def test_delete_record_item_not_exist_in_db(self):
@@ -228,11 +228,11 @@ class SQLite_TestCase(unittest.TestCase):
 
         s_db = test_module.SQLiteDB(DB_NAME, DB_PATH)
         rc, rm, data = s_db.create_table()
-        self.assertEquals(rc, 0)
+        self.assertEquals(rc, framework_db.NOERROR)
         self.assertEquals(rm, "")
         self.assertEquals(data, ())
         rc,rm,data =  s_db.get_rows_count()
-        self.assertEquals(rc, 0)
+        self.assertEquals(rc, framework_db.NOERROR)
         self.assertEquals(data, 0)
 
         records = [
@@ -244,14 +244,14 @@ class SQLite_TestCase(unittest.TestCase):
             s_db.add_record(item)
 
         rc, rm, data =  s_db.get_rows_count()
-        self.assertEquals(rc, 0)
+        self.assertEquals(rc, framework_db.NOERROR)
         self.assertEquals(data, 2)
 
         rmv_record = (("task_777", 1))
         rc, rm =  s_db.delete_record(rmv_record)
 
         rc,rm,data =  s_db.get_rows_count()
-        self.assertEquals(rc, 0)
+        self.assertEquals(rc, framework_db.NOERROR)
         self.assertEquals(data, 2)
 
     def test_delete_record_too_much_values(self):
@@ -259,11 +259,11 @@ class SQLite_TestCase(unittest.TestCase):
 
         s_db = test_module.SQLiteDB(DB_NAME, DB_PATH)
         rc, rm, data = s_db.create_table()
-        self.assertEquals(rc, 0)
+        self.assertEquals(rc, framework_db.NOERROR)
         self.assertEquals(rm, "")
         self.assertEquals(data, ())
         rc,rm,data =  s_db.get_rows_count()
-        self.assertEquals(rc, 0)
+        self.assertEquals(rc, framework_db.NOERROR)
         self.assertEquals(data, 0)
 
         records = [
@@ -275,7 +275,7 @@ class SQLite_TestCase(unittest.TestCase):
             s_db.add_record(item)
 
         rc, rm, data =  s_db.get_rows_count()
-        self.assertEquals(rc, 0)
+        self.assertEquals(rc, framework_db.NOERROR)
         self.assertEquals(data, 2)
 
         rmv_record = (("task_777", 1, 2))
@@ -283,77 +283,20 @@ class SQLite_TestCase(unittest.TestCase):
         self.assertEquals(rc, framework_db.ERROR_SQL_QUERY_VALUES)
 
         rc,rm,data =  s_db.get_rows_count()
-        self.assertEquals(rc, 0)
+        self.assertEquals(rc, framework_db.NOERROR)
         self.assertEquals(data, 2)
-    #
-    # def test_delete_update_record(self):
-    #     print "test_update_record"
-    #
-    #     s_db = test_module.SQLiteDB(DB_NAME, DB_PATH)
-    #     rc, rm, data = s_db.create_table()
-    #     self.assertEquals(rc, 0)
-    #     self.assertEquals(rm, "")
-    #     self.assertEquals(data, ())
-    #     rc,rm,data =  s_db.get_rows_count()
-    #     self.assertEquals(rc, 0)
-    #     self.assertEquals(data, 0)
-    #
-    #     record = ("task_1", "simple task 1", 1)
-    #
-    #     s_db.add_record(record)
-    #
-    #     rc, rm, data =  s_db.get_rows_count()
-    #     self.assertEquals(rc, 0)
-    #     self.assertEquals(data, 1)
-    #
-    #     record_upd = ("task_1", "simple task 2", 1)
-    #     s_db.update_record(record_upd)
-    #     rc, rm, data =  s_db.get_rows_count()
-    #     self.assertEquals(rc, 0)
-    #     self.assertEquals(data, 1)
-    #
-    #     rc, rm, data =  s_db.read_all()
-    #     print "DATA [%s]" %str(data)
-    #     self.assertEquals(data[0], record_upd)
-    #
-    #
-    # def test_delete_update_record_too_much_values(self):
-    #     print "test_update_record_too_much_values"
-    #
-    #     s_db = test_module.SQLiteDB(DB_NAME, DB_PATH)
-    #     rc, rm, data = s_db.create_table()
-    #     self.assertEquals(rc, 0)
-    #     self.assertEquals(rm, "")
-    #     self.assertEquals(data, ())
-    #     rc,rm,data =  s_db.get_rows_count()
-    #     self.assertEquals(rc, 0)
-    #     self.assertEquals(data, 0)
-    #
-    #     record = ("task_1", "simple task 1", 1)
-    #
-    #     s_db.add_record(record)
-    #
-    #     rc, rm, data =  s_db.get_rows_count()
-    #     self.assertEquals(rc, 0)
-    #     self.assertEquals(data, 1)
-    #
-    #     record_upd = ("task_1", "simple task 2", 1)
-    #     s_db.add_record(record_upd)
-    #     rc, rm, data =  s_db.get_rows_count()
-    #     self.assertEquals(rc, 0)
-    #     self.assertEquals(data, 1)
 
 
-    def test_delete_update_record_by_keys(self):
-        print "test_delete_update_record_by_keys"
+    def test_delete_update(self):
+        print "test_delete_update"
 
         s_db = test_module.SQLiteDB(DB_NAME, DB_PATH)
         rc, rm, data = s_db.create_table()
-        self.assertEquals(rc, 0)
+        self.assertEquals(rc, framework_db.NOERROR)
         self.assertEquals(rm, "")
         self.assertEquals(data, ())
-        rc,rm,data =  s_db.get_rows_count()
-        self.assertEquals(rc, 0)
+        rc, rm, data =  s_db.get_rows_count()
+        self.assertEquals(rc, framework_db.NOERROR)
         self.assertEquals(data, 0)
 
         record = ("task_1", "simple task 1", 1)
@@ -362,13 +305,41 @@ class SQLite_TestCase(unittest.TestCase):
         record_upd = ("task_1", "simple task 2", 1)
 
         rc, rm, data =  s_db.get_rows_count()
-        self.assertEquals(rc, 0)
+        self.assertEquals(rc, framework_db.NOERROR)
         self.assertEquals(data, 1)
 
-        rc, rm = s_db.update_record_by_keys(record_upd)
-        self.assertEquals(rc, 0)
+        rc, rm = s_db.update_record(record_upd)
+        self.assertEquals(rc, framework_db.NOERROR)
         rc, rm, data =  s_db.read_all()
-        print "DATA [%s]" %str(data)
+        self.assertEquals(data[0], record_upd)
+
+
+    def test_delete_update_too_much_values(self):
+        print "test_delete_update_too_much_values"
+
+        s_db = test_module.SQLiteDB(DB_NAME, DB_PATH)
+        rc, rm, data = s_db.create_table()
+        self.assertEquals(rc, framework_db.NOERROR)
+        self.assertEquals(rm, "")
+        self.assertEquals(data, ())
+        rc, rm, data =  s_db.get_rows_count()
+        self.assertEquals(rc, framework_db.NOERROR)
+        self.assertEquals(data, 0)
+
+        record = ("task_1", "simple task 1", 1)
+
+        s_db.add_record(record)
+        rc, rm, data =  s_db.get_rows_count()
+        self.assertEquals(rc, framework_db.NOERROR)
+        self.assertEquals(data, 1)
+
+        record_upd = ("task_1", "simple task 1", 1, 2)
+        rc, rm = s_db.update_record(record_upd)
+
+        err_msg = 'Wrong amount of values to update record from database'
+        self.assertEquals(rc, framework_db.ERROR_SQL_QUERY_VALUES)
+        self.assertEquals(rm, err_msg)
+
 
 if __name__ == "__main__":
     unittest.main()
